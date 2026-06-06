@@ -1,0 +1,83 @@
+# Recommended style (reference only — open-api:export ignores this filename).
+# Normally: openapi.yml holds openapi/info/servers; controllers/*.yml hold paths (+ optional components).
+# This file combines both patterns in one place so you can copy without hunting the reference tree.
+
+openapi: 3.0.3
+info:
+  title: My API
+  version: 1.0.0
+servers:
+  - url: /
+components:
+  schemas:
+    response.simple:
+      type: object
+      required: [ code, message ]
+      properties:
+        code:
+          type: integer
+        message:
+          type: string
+        data:
+          nullable: true
+    response.page:
+      type: object
+      required: [ code, message, data ]
+      properties:
+        code:
+          type: integer
+        message:
+          type: string
+        data:
+          type: object
+          required: [ items, total ]
+          properties:
+            items:
+              type: array
+              items: { }
+            total:
+              type: integer
+    ExampleBody:
+      type: object
+      properties:
+        name:
+          type: string
+paths:
+  /api/example:
+    get:
+      operationId: demo.example::status
+      summary: Example — use HandlerId-shaped operationId (see package README)
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/response.simple'
+    post:
+      operationId: demo.example::submit
+      summary: Example body + components schema
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ExampleBody'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/response.simple'
+  /api/examples:
+    get:
+      operationId: demo.example::index
+      summary: Example page response
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/response.page'

@@ -1,0 +1,47 @@
+openapi: 3.0.3
+info:
+  title: API
+  version: 1.0.0
+components:
+  schemas:
+    response.simple:
+      type: object
+      required: [ code, message ]
+      properties:
+        code:
+          type: integer
+          format: int32
+          example: 0
+        message:
+          type: string
+          example: ok
+        data:
+          nullable: true
+          description: Business payload (object/array/null by endpoint).
+    response.page:
+      type: object
+      required: [ code, message, data ]
+      properties:
+        code:
+          type: integer
+          format: int32
+          example: 0
+        message:
+          type: string
+          example: ok
+        data:
+          type: object
+          required: [ items, total ]
+          properties:
+            items:
+              type: array
+              items: { }
+            total:
+              type: integer
+              format: int64
+            page:
+              type: integer
+              format: int32
+            page_size:
+              type: integer
+              format: int32
